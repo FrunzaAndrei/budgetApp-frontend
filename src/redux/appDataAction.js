@@ -14,10 +14,9 @@ export const login = (email, password) => {
       dispatch({ type: LOGIN_IN_APP, token: response.data.token });
     } else {
       if (response && response.errors.length > 0) {
-        dispatch({
-          type: SET_ERROR,
-          error: response.errors[0].msg,
-        });
+        dispatch(displayError(response.errors[0].msg));
+      } else {
+        dispatch(displayError('Something went wrong'));
       }
     }
   };
@@ -31,10 +30,9 @@ export const signUp = (email, password) => {
       dispatch({ type: LOGIN_IN_APP, token: response.data.token });
     } else {
       if (response && response.errors.length > 0) {
-        dispatch({
-          type: SET_ERROR,
-          error: response.errors[0].msg,
-        });
+        dispatch(displayError(response.errors[0].msg));
+      } else {
+        dispatch(displayError('Something went wrong'));
       }
     }
   };
@@ -43,7 +41,6 @@ export const signUp = (email, password) => {
 export const budget = (params = {}, token) => {
   return async (dispatch) => {
     const response = await Api.postAsync('/api/budget', params, token);
-    console.log('response:', response);
     if (response.ok) {
       const { spenditure, budgetLimit } = response.data;
       dispatch({
@@ -53,6 +50,24 @@ export const budget = (params = {}, token) => {
           spenditure: spenditure || [],
         },
       });
+    } else {
+      if (response && response.errors.length > 0) {
+        dispatch(displayError(response.errors[0].msg));
+      } else {
+        dispatch(displayError('Something went wrong'));
+      }
     }
   };
+};
+
+export const displayError = (error) => {
+  return (dispatch) =>
+    dispatch({
+      type: SET_ERROR,
+      error,
+    });
+};
+
+export const hideError = () => {
+  return (dispatch) => dispatch({ type: RESET_ERROR });
 };

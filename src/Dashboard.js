@@ -1,15 +1,23 @@
 import moment from 'moment';
-import React, { Fragment, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
+import { budget, displayError } from './redux/appDataAction';
 
 const Dashboard = () => {
-  const { budgetLimit, spenditure } = useSelector((state) => ({
+  const dispatch = useDispatch();
+  const { budgetLimit, spenditure, token } = useSelector((state) => ({
     budgetLimit: state.appData.budget.budgetLimit,
     spenditure: state.appData.budget.spenditure,
+    token: state.appData.token,
   }));
   const [spendName, setSpendName] = useState('');
   const [amount, setAmount] = useState('');
+  const [budgetL, setBudgetL] = useState('');
+
+  useEffect(() => {
+    setBudgetL(budgetLimit);
+  }, [budgetLimit]);
 
   const isOverBudgetLimit = () => {
     let spend = 0;
@@ -36,7 +44,39 @@ const Dashboard = () => {
     return null;
   };
 
-  const handleAddData = () => {};
+  const handleAddData = async () => {
+    if (!spendName) {
+      return dispatch(displayError('Add Spenditure'));
+    }
+    if (!amount) {
+      return dispatch(displayError('Add Amount'));
+    }
+    const now = moment().format();
+    const newData = {
+      spenditure: [
+        ...spenditure,
+        { name: spendName, amount: amount, date: now },
+      ],
+      budgetLimit: budgetLimit,
+    };
+    await dispatch(budget(newData, token));
+    console.log('here');
+  };
+
+  const handleChangeBudgetLimit = () => {
+    if (budgetL === budgetLimit) {
+      return dispatch(displayError('Add new limit of budget'));
+    }
+    const newData = {
+      spenditure,
+      budgetLimit: budgetL,
+    };
+    dispatch(budget(newData, token));
+  };
+
+  const handleDelete = (idElem) => {
+    console.log('id element:', idElem);
+  };
 
   return (
     <Fragment>
@@ -60,14 +100,18 @@ const Dashboard = () => {
           <tbody>
             {spenditure &&
               spenditure.map((item) => {
-                console.log(item);
                 return (
                   <tr key={item._id} className={getRowClassName(item.date)}>
                     <td>{moment(item.date).format('DD/MM/YYYY')}</td>
                     <td>{item.name}</td>
                     <td>{item.amount} </td>
                     <td>
-                      <button class="btn btn-danger">X</button>
+                      <button
+                        class="btn btn-danger"
+                        onClick={() => handleDelete(item._id)}
+                      >
+                        X
+                      </button>
                     </td>
                   </tr>
                 );
@@ -75,8 +119,8 @@ const Dashboard = () => {
           </tbody>
         </table>
         <div className="space" />
-        <h3>Add data:</h3>
-        <form className="form">
+        <div className="form">
+          <h4>Add data:</h4>
           <div className="form-group">
             <input
               type="text"
@@ -97,10 +141,25 @@ const Dashboard = () => {
             />
           </div>
           <button className="btn" onClick={handleAddData}>
-            {' '}
             Add data
           </button>
-        </form>
+        </div>
+        <div className="space" />
+        <div className="form">
+          <h4>Budget limit:</h4>
+          <div className="form-group">
+            <input
+              type="number"
+              placeholder="Budget limit"
+              value={budgetL}
+              onChange={(e) => setBudgetL(e.target.value)}
+              name="budgetL"
+            />
+          </div>
+          <button className="btn" onClick={handleChangeBudgetLimit}>
+            Change budget limit
+          </button>
+        </div>
       </section>
     </Fragment>
   );
