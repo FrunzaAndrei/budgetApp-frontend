@@ -57,7 +57,41 @@ class Api {
       .then((res) => res)
       .catch((error) => error.response);
 
-    console.log('response:', response);
+    if (response && response.status === 200) {
+      return {
+        ok: true,
+        data: response.data,
+      };
+    } else {
+      if (response) {
+        return {
+          ok: false,
+          status: response.status || null,
+          errors: response.data.errors || null,
+        };
+      }
+    }
+  }
+
+  static async deleteAsync(route, token = null) {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:5000',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      },
+    };
+
+    if (token !== null) {
+      config.headers = Object.assign(config.headers, {
+        'x-auth-token': token,
+      });
+    }
+
+    const response = await axios
+      .delete(route, config)
+      .then((res) => res)
+      .catch((error) => error.response);
 
     if (response && response.status === 200) {
       return {

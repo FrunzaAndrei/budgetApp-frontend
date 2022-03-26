@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
-import { budget, displayError } from './redux/appDataAction';
+import { budget, deleteSpenditure, displayError } from './redux/appDataAction';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -75,7 +75,7 @@ const Dashboard = () => {
   };
 
   const handleDelete = (idElem) => {
-    console.log('id element:', idElem);
+    dispatch(deleteSpenditure(idElem, token));
   };
 
   return (

@@ -1,5 +1,6 @@
 import { createReducer } from '../utils/reduceHelper';
 import {
+  UPDATE_BUDGET,
   LOGIN_IN_APP,
   RESET_ERROR,
   SET_BUDGET,
@@ -33,6 +34,13 @@ export const appData = createReducer(initialState, {
     };
   },
   [SET_BUDGET](state, action) {
+    return {
+      ...state,
+      budget: action.budget,
+      error: null,
+    };
+  },
+  [UPDATE_BUDGET](state, action) {
     return {
       ...state,
       budget: action.budget,
