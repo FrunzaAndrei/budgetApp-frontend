@@ -5,6 +5,7 @@ import {
   RESET_ERROR,
   SET_BUDGET,
   SET_ERROR,
+  RESET_ALL_DATA,
 } from './actionTypes';
 
 export const login = (email, password) => {
@@ -21,6 +22,13 @@ export const login = (email, password) => {
       }
     }
   };
+};
+
+export const logout = () => {
+  return (dispatch) =>
+    dispatch({
+      type: RESET_ALL_DATA,
+    });
 };
 
 export const signUp = (email, password) => {

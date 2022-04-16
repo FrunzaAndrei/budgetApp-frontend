@@ -5,6 +5,7 @@ import {
   RESET_ERROR,
   SET_BUDGET,
   SET_ERROR,
+  RESET_ALL_DATA,
 } from './actionTypes';
 
 const initialState = {
@@ -46,5 +47,8 @@ export const appData = createReducer(initialState, {
       budget: action.budget,
       error: null,
     };
+  },
+  [RESET_ALL_DATA]() {
+    return initialState;
   },
 });

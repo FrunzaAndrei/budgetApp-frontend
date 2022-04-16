@@ -2,7 +2,12 @@ import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
-import { budget, deleteSpenditure, displayError } from './redux/appDataAction';
+import {
+  budget,
+  deleteSpenditure,
+  displayError,
+  logout,
+} from './redux/appDataAction';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -78,8 +83,17 @@ const Dashboard = () => {
     dispatch(deleteSpenditure(idElem, token));
   };
 
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
+
   return (
     <Fragment>
+      <div className="headerDashboard">
+        <button className="btn" onClick={handleLogOut}>
+          Log out
+        </button>
+      </div>
       <section className="container">
         {isOverBudgetLimit() > 0 ? (
           <div className="alert alert-danger">

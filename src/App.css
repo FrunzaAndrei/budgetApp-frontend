@@ -196,3 +196,11 @@ img {
 .space {
   height: 40px
 }
+
+.headerDashboard {
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
