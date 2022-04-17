@@ -11,10 +11,11 @@ import {
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { budgetLimit, spenditure, token } = useSelector((state) => ({
+  const { budgetLimit, spenditure, token, error } = useSelector((state) => ({
     budgetLimit: state.appData.budget.budgetLimit,
     spenditure: state.appData.budget.spenditure,
     token: state.appData.token,
+    error: state.appData.error,
   }));
   const [spendName, setSpendName] = useState('');
   const [amount, setAmount] = useState('');
@@ -95,6 +96,7 @@ const Dashboard = () => {
         </button>
       </div>
       <section className="container">
+        {error && <div className="alert alert-danger">{error}</div>}
         {isOverBudgetLimit() > 0 ? (
           <div className="alert alert-danger">
             Budget limit exceeded by {isOverBudgetLimit()}
